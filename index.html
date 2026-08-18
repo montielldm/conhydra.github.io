@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conhydra — Propuesta de Rediseño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1F26;
+    --deep:#0E4A52;
+    --water:#1C8C8C;
+    --water-light:#4FB8B0;
+    --clay:#C97D4C;
+    --paper:#EEF0EC;
+    --paper-dim:#E2E5DE;
+    --line: rgba(10,31,38,0.14);
+    --line-light: rgba(238,240,236,0.22);
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--water);
+  }
+  .eyebrow.on-dark{color:var(--water-light);}
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-0.01em;}
+
+  /* ===== topographic contour signature ===== */
+  .contour-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+  .contour-bg svg{width:100%;height:100%;}
+  .contour-line{fill:none;stroke-width:1;}
+
+  /* ===== notice banner (mockup context) ===== */
+  .notice{
+    background:var(--ink);
+    color:var(--paper-dim);
+    font-family:var(--mono);
+    font-size:12px;
+    text-align:center;
+    padding:9px 20px;
+    letter-spacing:0.02em;
+  }
+  .notice strong{color:var(--water-light);}
+
+  /* ===== top utility bar ===== */
+  .utility{
+    background:var(--deep);
+    color:var(--paper-dim);
+  }
+  .utility .wrap{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 32px;font-size:12.5px;
+  }
+  .utility a{opacity:0.9;}
+  .pse-btn{
+    background:var(--clay);color:#fff;font-family:var(--mono);
+    font-size:11px;letter-spacing:0.06em;padding:4px 12px;border-radius:3px;
+  }
+
+  /* ===== header ===== */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(238,240,236,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;
+  }
+  .logo{
+    font-family:var(--display);font-weight:700;font-size:21px;
+    letter-spacing:-0.02em;display:flex;align-items:center;gap:8px;
+  }
+  .logo .mark{
+    width:11px;height:11px;border-radius:50%;
+    background:var(--water);
+    box-shadow:0 0 0 3px rgba(28,140,140,0.18);
+  }
+  nav.main{display:flex;gap:34px;align-items:center;}
+  nav.main a{
+    font-size:14px;font-weight:500;color:var(--ink);
+    position:relative;padding:4px 0;
+  }
+  nav.main a::after{
+    content:'';position:absolute;left:0;bottom:-2px;width:0;height:1.5px;
+    background:var(--water);transition:width 0.25s ease;
+  }
+  nav.main a:hover::after{width:100%;}
+  .nav-cta{
+    background:var(--ink);color:var(--paper)!important;
+    padding:9px 18px;border-radius:2px;font-size:13px;
+  }
+  .nav-cta::after{display:none;}
+
+  /* ===== hero ===== */
+  .hero{
+    position:relative;background:var(--ink);color:var(--paper);
+    padding:96px 0 0;overflow:hidden;
+  }
+  .hero .wrap{position:relative;z-index:2;}
+  .hero-top{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    gap:60px;padding-bottom:70px;
+  }
+  .hero-headline{max-width:640px;}
+  .hero-headline h1{
+    font-size:52px;line-height:1.06;letter-spacing:-0.02em;
+    margin:18px 0 26px;
+  }
+  .hero-headline h1 em{
+    font-style:normal;color:var(--water-light);
+  }
+  .hero-headline p{
+    font-size:16.5px;color:rgba(238,240,236,0.72);
+    max-width:480px;margin-bottom:32px;
+  }
+  .hero-actions{display:flex;gap:14px;align-items:center;}
+  .btn-primary{
+    background:var(--water);color:var(--ink);
+    padding:13px 26px;font-weight:600;font-size:14.5px;
+    border-radius:2px;transition:background 0.2s;
+  }
+  .btn-primary:hover{background:var(--water-light);}
+  .btn-ghost{
+    border:1px solid rgba(238,240,236,0.3);color:var(--paper);
+    padding:13px 22px;font-size:14.5px;border-radius:2px;
+    transition:border-color 0.2s;
+  }
+  .btn-ghost:hover{border-color:var(--water-light);}
+
+  .hero-side{
+    font-family:var(--mono);font-size:12px;color:rgba(238,240,236,0.55);
+    text-align:right;min-width:180px;padding-top:6px;
+  }
+  .hero-side .val{
+    display:block;font-size:26px;color:var(--water-light);
+    font-family:var(--display);font-weight:600;margin-bottom:2px;
+  }
+  .hero-side .row{margin-bottom:18px;}
+
+  .hero-contour-wrap{position:relative;height:230px;}
+
+  /* ===== stats readout ===== */
+  .readout{
+    background:var(--deep);color:var(--paper);
+    border-top:1px solid var(--line-light);
+    border-bottom:1px solid var(--line-light);
+  }
+  .readout .wrap{
+    display:grid;grid-template-columns:repeat(5,1fr);
+    padding:0;
+  }
+  .readout-cell{
+    padding:30px 24px;border-left:1px solid var(--line-light);
+  }
+  .readout-cell:first-child{border-left:none;}
+  .readout-num{
+    font-family:var(--mono);font-size:32px;font-weight:500;
+    color:var(--water-light);letter-spacing:-0.02em;
+  }
+  .readout-label{
+    font-size:12.5px;color:rgba(238,240,236,0.62);margin-top:8px;
+    line-height:1.35;
+  }
+
+  /* ===== section shell ===== */
+  section{padding:96px 0;}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:48px;gap:40px;
+  }
+  .section-head h2{font-size:34px;letter-spacing:-0.015em;margin-top:10px;}
+  .section-head .desc{max-width:340px;font-size:14.5px;color:rgba(10,31,38,0.62);}
+
+  /* ===== country toggle ===== */
+  .toggle{
+    display:inline-flex;border:1px solid var(--line);border-radius:2px;
+    font-family:var(--mono);font-size:12.5px;overflow:hidden;
+  }
+  .toggle button{
+    background:transparent;border:none;padding:9px 18px;cursor:pointer;
+    color:var(--ink);opacity:0.5;letter-spacing:0.04em;
+    font-family:var(--mono);border-right:1px solid var(--line);
+  }
+  .toggle button:last-child{border-right:none;}
+  .toggle button.active{background:var(--ink);color:var(--paper);opacity:1;}
+
+  /* ===== business lines ===== */
+  .lines-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);
+  }
+  .line-card{
+    background:var(--paper);padding:30px 26px;min-height:230px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    transition:background 0.2s;
+  }
+  .line-card:hover{background:#fff;}
+  .line-card.hidden{display:none;}
+  .line-card .num{font-family:var(--mono);font-size:11px;color:var(--water);letter-spacing:0.06em;}
+  .line-card .country-tag{
+    font-family:var(--mono);font-size:10px;color:var(--clay);
+    letter-spacing:0.05em;margin-top:10px;
+  }
+  .line-card h3{font-size:17px;line-height:1.28;margin:14px 0 18px;letter-spacing:-0.005em;}
+  .line-card .link{
+    font-size:13px;font-weight:600;color:var(--ink);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .line-card .link .arrow{transition:transform 0.2s;}
+  .line-card:hover .link .arrow{transform:translateX(3px);}
+
+  /* ===== presence / map section ===== */
+  .presence{background:var(--ink);color:var(--paper);position:relative;overflow:hidden;}
+  .presence .wrap{position:relative;z-index:2;}
+  .presence-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+  }
+  .presence h2{font-size:34px;color:var(--paper);margin:12px 0 20px;}
+  .presence p{color:rgba(238,240,236,0.68);font-size:15px;max-width:420px;margin-bottom:28px;}
+  .country-list{display:flex;flex-direction:column;gap:0;}
+  .country-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 0;border-bottom:1px solid var(--line-light);
+    font-family:var(--mono);font-size:13px;
+  }
+  .country-row .name{font-family:var(--display);font-size:16px;font-weight:600;}
+  .country-row .meta{color:rgba(238,240,236,0.55);}
+  .map-panel{
+    border:1px solid var(--line-light);border-radius:2px;
+    aspect-ratio:1/1;position:relative;overflow:hidden;
+    background:rgba(238,240,236,0.03);
+  }
+
+  /* ===== blog ===== */
+  .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .blog-card{border:1px solid var(--line);background:#fff;}
+  .blog-thumb{
+    height:170px;background:linear-gradient(135deg,var(--deep),var(--water));
+    position:relative;overflow:hidden;
+  }
+  .blog-body{padding:22px 22px 24px;}
+  .blog-date{font-family:var(--mono);font-size:11px;color:var(--water);letter-spacing:0.04em;}
+  .blog-body h3{font-size:16.5px;margin:12px 0 14px;line-height:1.32;}
+  .blog-body .link{font-size:13px;font-weight:600;}
+
+  /* ===== allies ===== */
+  .allies{background:var(--paper-dim);}
+  .allies-row{
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:36px;padding-top:20px;
+  }
+  .ally{
+    font-family:var(--mono);font-size:13px;color:rgba(10,31,38,0.4);
+    letter-spacing:0.03em;
+  }
+  .cert-strip{
+    display:flex;gap:10px;margin-top:36px;flex-wrap:wrap;
+  }
+  .cert-pill{
+    border:1px solid var(--line);font-family:var(--mono);font-size:11px;
+    padding:6px 14px;border-radius:20px;color:var(--deep);
+  }
+
+  /* ===== footer ===== */
+  footer{background:var(--ink);color:rgba(238,240,236,0.7);padding:70px 0 30px;}
+  .footer-grid{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;
+    padding-bottom:50px;border-bottom:1px solid var(--line-light);
+  }
+  .footer-brand .logo{color:var(--paper);margin-bottom:16px;}
+  .footer-brand p{font-size:13.5px;max-width:260px;color:rgba(238,240,236,0.5);}
+  .footer-col h4{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.08em;
+    text-transform:uppercase;color:var(--water-light);margin-bottom:16px;
+  }
+  .footer-col a{display:block;font-size:13.5px;margin-bottom:10px;color:rgba(238,240,236,0.72);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;padding-top:24px;
+    font-family:var(--mono);font-size:11.5px;color:rgba(238,240,236,0.4);
+  }
+
+  @media (max-width:900px){
+    nav.main{display:none;}
+    .hero-top{flex-direction:column;gap:30px;}
+    .hero-side{text-align:left;}
+    .hero-headline h1{font-size:36px;}
+    .readout .wrap{grid-template-columns:repeat(2,1fr);}
+    .readout-cell:nth-child(3){border-left:none;}
+    .lines-grid{grid-template-columns:1fr;}
+    .presence-grid{grid-template-columns:1fr;}
+    .blog-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="notice"><strong>MOCKUP</strong> — propuesta de rediseño visual para conhydra.com · contenido de ejemplo</div>
+
+<div class="utility">
+  <div class="wrap">
+    <span>info@conhydra.com</span>
+    <a href="#" class="pse-btn">PAGAR PSE →</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="mark"></span>CONHYDRA</div>
+    <nav class="main">
+      <a href="#">Nosotros</a>
+      <a href="#lineas">Líneas de negocio</a>
+      <a href="#presencia">Presencia</a>
+      <a href="#blog">Blog</a>
+      <a href="#" class="nav-cta">Servicios en línea</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom:0;">
+  <div class="wrap">
+    <div class="hero-top">
+      <div class="hero-headline">
+        <span class="eyebrow on-dark">GESTIÓN INTEGRAL DEL AGUA · COLOMBIA & PERÚ</span>
+        <h1>Diseñamos, operamos y <em>mantenemos</em> el agua que llega a millones de personas.</h1>
+        <p>Gestores integrales de recursos hídricos y residuos sólidos. Desde 1996 aseguramos sistemas de agua potable y saneamiento en América Latina y el Caribe.</p>
+        <div class="hero-actions">
+          <a href="#lineas" class="btn-primary">Ver líneas de negocio</a>
+          <a href="#" class="btn-ghost">Nuestra empresa</a>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="row"><span class="val">29 años</span>operando sistemas de agua potable y residual</div>
+        <div class="row"><span class="val">LATAM + Caribe</span>presencia en proyectos regionales</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-contour-wrap">
+    <div class="contour-bg" id="heroContour"></div>
+  </div>
+</section>
+
+<div class="readout">
+  <div class="wrap">
+    <div class="readout-cell">
+      <div class="readout-num" data-count="120">0</div>
+      <div class="readout-label">Proyectos en América Latina y el Caribe</div>
+    </div>
+    <div class="readout-cell">
+      <div class="readout-num" data-count="29">0</div>
+      <div class="readout-label">Años operando sistemas de agua potable y residual desde 1996</div>
+    </div>
+    <div class="readout-cell">
+      <div class="readout-num" data-count="96" data-suffix="%">0%</div>
+      <div class="readout-label">Satisfacción de nuestros clientes</div>
+    </div>
+    <div class="readout-cell">
+      <div class="readout-num" data-count="480">0</div>
+      <div class="readout-label">Millones de m³ de agua potable producida al año</div>
+    </div>
+    <div class="readout-cell">
+      <div class="readout-num" data-count="7">0</div>
+      <div class="readout-label">Aeropuertos de Colombia con sistemas operados por Conhydra</div>
+    </div>
+  </div>
+</div>
+
+<section id="lineas">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">LÍNEAS DE NEGOCIO</span>
+        <h2>Un servicio integral, país por país.</h2>
+      </div>
+      <div class="toggle" id="countryToggle">
+        <button class="active" data-country="all">TODOS</button>
+        <button data-country="co">COLOMBIA</button>
+        <button data-country="pe">PERÚ</button>
+      </div>
+    </div>
+
+    <div class="lines-grid" id="linesGrid">
+      <div class="line-card" data-country="co pe">
+        <div>
+          <span class="num">LN·01</span>
+          <div class="country-tag">COLOMBIA · PERÚ</div>
+          <h3>Asesoría, Consultoría e Interventoría</h3>
+        </div>
+        <a href="#" class="link">Conoce más <span class="arrow">→</span></a>
+      </div>
+      <div class="line-card" data-country="co pe">
+        <div>
+          <span class="num">LN·02</span>
+          <div class="country-tag">COLOMBIA · PERÚ</div>
+          <h3>Administración, Operación y Mantenimiento</h3>
+        </div>
+        <a href="#" class="link">Conoce más <span class="arrow">→</span></a>
+      </div>
+      <div class="line-card" data-country="co">
+        <div>
+          <span class="num">LN·03</span>
+          <div class="country-tag">COLOMBIA</div>
+          <h3>Diagnóstico y Mantenimiento de Redes</h3>
+        </div>
+        <a href="#" class="link">Conoce más <span class="arrow">→</span></a>
+      </div>
+      <div class="line-card" data-country="pe">
+        <div>
+          <span class="num">LN·04</span>
+          <div class="country-tag">PERÚ</div>
+          <h3>Construcción, Optimización y Reposición</h3>
+        </div>
+        <a href="#" class="link">Conoce más <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="presence" id="presencia">
+  <div class="contour-bg" id="presenceContour" style="opacity:0.35;"></div>
+  <div class="wrap">
+    <div class="presence-grid">
+      <div>
+        <span class="eyebrow on-dark">COBERTURA REGIONAL</span>
+        <h2>Dos países, una misma exigencia técnica.</h2>
+        <p>Operamos sedes en Colombia y Perú, con proyectos activos en agua potable, saneamiento y residuos sólidos across la región.</p>
+        <div class="country-list">
+          <div class="country-row">
+            <span class="name">Colombia</span>
+            <span class="meta">Sede principal · Calle 32F #63A–117</span>
+          </div>
+          <div class="country-row">
+            <span class="name">Perú</span>
+            <span class="meta">Sucursal · Miraflores, Lima</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-panel">
+        <div class="contour-bg" id="mapContour"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">BLOG</span>
+        <h2>Artículos destacados</h2>
+      </div>
+      <a href="#" class="btn-ghost" style="color:var(--ink);border-color:var(--line);">Ingresar al blog</a>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="blog-thumb"></div>
+        <div class="blog-body">
+          <span class="blog-date">27 FEB 2026</span>
+          <h3>Laboratorio Ambiental Acreditado ISO 17025 IDEAM</h3>
+          <a href="#" class="link">Leer más →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:linear-gradient(135deg,var(--clay),var(--deep));"></div>
+        <div class="blog-body">
+          <span class="blog-date">28 ENE 2026</span>
+          <h3>Gestión Social: conectando con las comunidades</h3>
+          <a href="#" class="link">Leer más →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:linear-gradient(135deg,var(--water),var(--ink));"></div>
+        <div class="blog-body">
+          <span class="blog-date">29 NOV 2024</span>
+          <h3>15 años trabajando por el Perú</h3>
+          <a href="#" class="link">Leer más →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="allies">
+  <div class="wrap">
+    <span class="eyebrow">ALIADOS Y CERTIFICACIONES</span>
+    <div class="allies-row">
+      <span class="ally">ALP</span>
+      <span class="ally">ESI</span>
+      <span class="ally">HYDRA</span>
+      <span class="ally">GESCOMER TECH</span>
+    </div>
+    <div class="cert-strip">
+      <span class="cert-pill">ISO 9001</span>
+      <span class="cert-pill">ISO 14001</span>
+      <span class="cert-pill">ISO 45001</span>
+      <span class="cert-pill">ISO 17025 IDEAM</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="mark"></span>CONHYDRA</div>
+        <p>Gestores integrales de los recursos hídricos y residuos sólidos, líderes en la gestión integral del agua en América Latina.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Nosotros</h4>
+        <a href="#">Nuestra empresa</a>
+        <a href="#">Directores</a>
+        <a href="#">Sostenibilidad</a>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <a href="#">Líneas de negocio</a>
+        <a href="#">Servicios en línea</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="#">Sede Colombia · (+604) 444 16 76</a>
+        <a href="#">Sucursal Perú · (+51) 960 457 516</a>
+        <a href="#">info@conhydra.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CONHYDRA S.A. — TODOS LOS DERECHOS RESERVADOS</span>
+      <span>PROPUESTA DE REDISEÑO · V1</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ---- topographic contour generator (signature element) ----
+function genContours(id, opts){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const w = 1200, h = opts.h || 400;
+  const lines = opts.lines || 9;
+  const colors = opts.colors || ['#1C8C8C','#4FB8B0','#0E4A52'];
+  let svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">`;
+  for(let i=0;i<lines;i++){
+    const yBase = (h/(lines+1))*(i+1);
+    const amp = 18 + (i%4)*10;
+    const freq = 0.006 + (i%3)*0.002;
+    const phase = i*0.7;
+    let d = `M 0 ${yBase}`;
+    for(let x=0;x<=w;x+=20){
+      const y = yBase + Math.sin(x*freq + phase)*amp + Math.sin(x*freq*2.3+phase)*amp*0.4;
+      d += ` L ${x} ${y.toFixed(1)}`;
+    }
+    const color = colors[i % colors.length];
+    const op = opts.baseOpacity ? opts.baseOpacity - i*0.01 : 0.18 + (i%3)*0.05;
+    svg += `<path class="contour-line" d="${d}" stroke="${color}" style="opacity:${op}"/>`;
+  }
+  svg += `</svg>`;
+  el.innerHTML = svg;
+}
+genContours('heroContour', {h:230, lines:11, colors:['#1C8C8C','#4FB8B0','#0E4A52'], baseOpacity:0.5});
+genContours('presenceContour', {h:600, lines:14, colors:['#1C8C8C','#0E4A52'], baseOpacity:0.3});
+genContours('mapContour', {h:500, lines:10, colors:['#1C8C8C','#4FB8B0'], baseOpacity:0.6});
+
+// ---- country toggle filter ----
+const toggle = document.getElementById('countryToggle');
+const cards = document.querySelectorAll('.line-card');
+toggle.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  toggle.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const c = btn.dataset.country;
+  cards.forEach(card=>{
+    const countries = card.dataset.country.split(' ');
+    card.classList.toggle('hidden', c!=='all' && !countries.includes(c));
+  });
+});
+
+// ---- count-up stats on scroll ----
+const nums = document.querySelectorAll('.readout-num');
+let animated = false;
+function animateCount(){
+  if(animated) return;
+  const trigger = document.querySelector('.readout').getBoundingClientRect().top;
+  if(trigger > window.innerHeight * 0.85) return;
+  animated = true;
+  nums.forEach(n=>{
+    const target = parseInt(n.dataset.count,10);
+    const suffix = n.dataset.suffix || '';
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target/40));
+    const iv = setInterval(()=>{
+      cur += step;
+      if(cur >= target){ cur = target; clearInterval(iv); }
+      n.textContent = cur + suffix;
+    }, 24);
+  });
+}
+window.addEventListener('scroll', animateCount);
+animateCount();
+</script>
+
+</body>
+</html>
